@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>???????</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      font-family: monospace;
+    }
+
+    .background-eye {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 90vmin;
+      height: 90vmin;
+      background: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczZnbHpycDBtNjJ6dml4cDJ3djg4amxxejZwNnIzc29kMTdoemQ4biZlcD12MV9naWZzX3NlYXJjaCZjdD1n/n3UBd63oVlQLC/giphy.gif") no-repeat center center;
+      background-size: contain;
+      transform: translate(-50%, -50%);
+      opacity: 1.45; /* Corrigido para garantir que o GIF apareça */
+      z-index: 0;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      z-index: 1;
+    }
+
+    #statusMessage {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: lime;
+      font-family: monospace;
+      font-size: 16px;
+      z-index: 2;
+    }
+
+    #statusMessage a {
+      color: lime;
+      text-decoration: none;
+    }
+
+    #statusMessage a:hover {
+      text-decoration: underline;
+    }
+
+    .crypto-box {
+      position: absolute;
+      width: 250px;
+      padding: 15px;
+      background: #00000088;
+      border: 1px solid lime;
+      border-radius: 10px;
+      color: white; /* Texto base em branco */
+      font-family: monospace;
+      font-size: 14px;
+      z-index: 2;
+      box-shadow: 0 0 10px lime;
+    }
+
+    .variacao-pos {
+      color: #00ff00; /* Verde para variação positiva */
+    }
+
+    .variacao-neg {
+      color: red; /* Vermelho para variação negativa */
+    }
+
+    .lucro-pos {
+      color: #00ff00; /* Verde para lucro positivo */
+    }
+
+    .lucro-neg {
+      color: red; /* Vermelho para lucro negativo */
+    }
+
+    #btcBox {
+      top: calc(50% - 110px);
+      left: 20px;
+    }
+    #oxoBox {
+      top: calc(50% + 20px);
+      left: 20px;
+    }
+    #solBox {
+      top: calc(50% - 110px);
+      right: 20px;
+    }
+    #ethBox {
+      top: calc(50% + 20px);
+      right: 20px;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-family: monospace;
+      font-size: 20px;
+      z-index: 2;
+    }
+
+    #footerText {
+      color: lime;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <div id="btcBox" class="crypto-box">BTC: Carregando...</div>
+  <div id="oxoBox" class="crypto-box">0x0.ai: Carregando...</div>
+  <div id="solBox" class="crypto-box">SOL: Carregando...</div>
+  <div id="ethBox" class="crypto-box">ETH: Carregando...</div>
+  <div class="background-eye"></div>
+  <canvas id="spiralCanvas"></canvas>
+  <div id="statusMessage"><a href="page2.html" target="_blank">???????</a></div>
+
+  <audio id="typeSound" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
+
+  <footer>
+    <p id="footerText"></p>
+  </footer>
+
+  <script>
+    const footerTextEl = document.getElementById("footerText");
+    const fullText = "Sem reis, sem regras, sem extorsão, liberdade em código. Est. 2018";
+    let currentChar = 0;
+    let typing = true;
+
+    function typeFooter() {
+      if (currentChar <= fullText.length) {
+        let html = `<span style="color:lime">${fullText.slice(0, currentChar)}</span>`;
+        footerTextEl.innerHTML = html;
+        footerTextEl.style.opacity = 1;
+
+        currentChar++;
+        setTimeout(typeFooter, 100);
+      } else {
+        setTimeout(() => {
+          typing = false;
+          eraseFooter();
+        }, 3000);
+      }
+    }
+
+    function eraseFooter() {
+      if (currentChar >= 0) {
+        let html = `<span style="color:lime">${fullText.slice(0, currentChar)}</span>`;
+        footerTextEl.innerHTML = html;
+        currentChar--;
+        setTimeout(eraseFooter, 30);
+      } else {
+        footerTextEl.style.opacity = 0;
+        setTimeout(() => {
+          typing = true;
+          currentChar = 0;
+          typeFooter();
+        }, 1000);
+      }
+    }
+
+    typeFooter();
+
+    const canvas = document.getElementById('spiralCanvas');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const binaryText = "01000100011011110110110101101001011011100110000101110100011001010010000001000101011011100111010001110010011001010111000001110010011001010111010101110011001000000101001101100101011011010110100100100000010100100110010101100111011100100110000100100000011011100110111101110011001000000100110101100101011100100110001101100001011001000110111100100000011011110111010100100000010000110110111101100100011001010101100001110010011001010110110001100001001000000100111101110000011001010110111000100000010001000110010101100011011001010111001001110100011011110111001100101110";
+    const letters = binaryText.split('');
+    const maxChars = 180;
+    let index = 0;
+    let angleOffset = 0;
+    const baseRadius = 130;
+    const radiusIncrement = 0.6;
+    const angleStep = 0.3;
+    let frameCounter = 0;
+    const typingSpeed = 2;
+    const typeSound = document.getElementById('typeSound');
+
+    function formatBRL(value) {
+      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    async function fetchCryptoData() {
+      try {
+        const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,0x0-ai-ai-smart-contract,usd&vs_currencies=usd,brl&include_24hr_change=true';
+        const response = await fetch(url);
+        return await response.json();
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+        return null;
+      }
+    }
+
+    async function updatePrices() {
+      const data = await fetchCryptoData();
+      if (!data) return;
+
+      const dolarBRL = data.usd.brl;
+
+      const moedas = [
+        {
+          id: "bitcoin",
+          nome: "BTC",
+          box: "btcBox",
+          precoCompraUSD: 5000,
+          ano: "2018"
+        },
+        {
+          id: "ethereum",
+          nome: "ETH",
+          box: "ethBox",
+          precoCompraUSD: 450,
+          ano: "2020"
+        },
+        {
+          id: "solana",
+          nome: "SOL",
+          box: "solBox",
+          precoCompraUSD: 12.25,
+          ano: "2022"
+        },
+        {
+          id: "0x0-ai-ai-smart-contract",
+          nome: "0x0.ai",
+          box: "oxoBox",
+          precoCompraUSD: 0.001569,
+          ano: "2023"
+        }
+      ];
+
+      moedas.forEach(moeda => {
+        const precoUSD = data[moeda.id].usd;
+        const precoBRL = precoUSD * dolarBRL;
+        const compraBRL = moeda.precoCompraUSD * dolarBRL;
+        const lucroPercent = ((precoBRL - compraBRL) / compraBRL) * 100;
+        const variacao = data[moeda.id].usd_24h_change || 0; // Variação de 24h
+        const variacaoClass = variacao < 0 ? 'variacao-neg' : 'variacao-pos';
+        const lucroClass = lucroPercent < 0 ? 'lucro-neg' : 'lucro-pos';
+
+        const html = `
+          ${moeda.nome}: ${formatBRL(precoBRL)} <span class="${variacaoClass}">(${variacao.toFixed(2)}%)</span><br>
+          DCA: ${formatBRL(compraBRL)}<br>
+          Holding &#x23F3;  ${moeda.ano}–2025: <span class="${lucroClass}">${lucroPercent.toFixed(3)}%</span>
+        `;
+        document.getElementById(moeda.box).innerHTML = html;
+      });
+    }
+
+    updatePrices();
+    setInterval(updatePrices, 15000);
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const centerX = canvas.width / 2, centerY = canvas.height / 2;
+      ctx.font = '14px monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      let angle = angleOffset;
+
+      for (let i = 0; i < index; i++) {
+        const char = letters[i % letters.length];
+        const radius = baseRadius + i * radiusIncrement;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        let fade = Math.max(1 - (index - i) / maxChars, 0) ** 1.5;
+        ctx.fillStyle = `rgba(0,255,0,${fade})`;
+        ctx.fillText(char, x, y);
+        angle += angleStep;
+      }
+
+      angleOffset += 0.002;
+      frameCounter++;
+      if (frameCounter >= typingSpeed) {
+        frameCounter = 0;
+        index++;
+        typeSound.currentTime = 0;
+        typeSound.play();
+      }
+      if (index > maxChars) {
+        index = 0;
+        angleOffset = 0;
+      }
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    setInterval(() => {
+      document.body.style.backgroundColor = '#003300';
+      setTimeout(() => document.body.style.backgroundColor = 'black', 50);
+    }, 5000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading Hacker</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: #00ff00;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    #loading {
+      font-size: 2em;
+      border-right: 2px solid #00ff00;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation: typing 3s steps(12) infinite alternate, blink 0.7s infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 12ch; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .btn {
+      margin-top: 40px;
+      padding: 12px 24px;
+      border: 2px solid #00ff00;
+      background: transparent;
+      color: #00ff00;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      animation: hacker-glow 1s infinite alternate;
+    }
+
+    .btn:hover {
+      background: #00ff00;
+      color: black;
+    }
+
+    @keyframes hacker-glow {
+      from {
+        box-shadow: 0 0 5px #00ff00;
+      }
+      to {
+        box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">EM PROGRESSO...</div>
+  <a href="index.html"><button class="btn">VOLTAR</button></a>
+</body>
+</html>
