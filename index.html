@@ -7,26 +7,26 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at center, #050510 0%, #000 100%);
+      background: #0e0e10;
       width: 100%;
       height: 100%;
-      position: relative;
-      font-family: "Consolas", "Courier New", monospace;
-      overflow: hidden;
+      font-family: "Inter", "Segoe UI", sans-serif;
       color: #e0e0e0;
+      overflow: hidden;
     }
 
+    /* Fundo animado discreto */
     .background-eye {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 90vmin;
-      height: 90vmin;
-      background: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczZnbHpycDBtNjJ6dml4cDJ3djg4amxxejZwNnIzc29kMTdoemQ4biZlcD12MV9naWZzX3NlYXJjaCZjdD1n/n3UBd63oVlQLC/giphy.gif") no-repeat center center;
+      width: 85vmin;
+      height: 85vmin;
+      background: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczZnbHpycDBtNjJ6dml4cDJ3djg4amxxejZwNnIzc29kMTdoemQ4biZlcD12MV9naWZzX3NlYXJjaCZjdD1n/n3UBd63oVlQLC/giphy.gif") no-repeat center;
       background-size: contain;
       transform: translate(-50%, -50%);
-      opacity: 0.35;
-      filter: drop-shadow(0 0 20px #6a00ff);
+      opacity: 0.25;
+      filter: blur(2px) brightness(0.8);
       z-index: 0;
     }
 
@@ -40,103 +40,92 @@
 
     #statusMessage {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      color: #9e8cff;
-      font-family: monospace;
-      font-size: 16px;
+      top: 15px;
+      right: 20px;
+      color: #8fa3b5;
+      font-size: 15px;
+      font-weight: 500;
       z-index: 2;
+      letter-spacing: 0.5px;
     }
 
     #statusMessage a {
-      color: #b79aff;
+      color: #a5b8c9;
       text-decoration: none;
       transition: 0.3s;
     }
 
     #statusMessage a:hover {
-      color: #fff;
-      text-shadow: 0 0 8px #b79aff;
+      color: #ffffff;
     }
 
+    /* Caixas 3D modernas */
     .crypto-box {
       position: absolute;
       width: 250px;
       padding: 15px;
-      background: rgba(20, 20, 35, 0.65);
-      border: 1px solid rgba(140, 120, 255, 0.4);
+      background: linear-gradient(145deg, #151518, #101012);
+      border: 1px solid #1f1f24;
       border-radius: 12px;
-      backdrop-filter: blur(6px);
-      color: #e6e6e6;
-      font-family: monospace;
+      color: #d0d0d0;
       font-size: 14px;
+      box-shadow: 3px 3px 8px #0a0a0c, -2px -2px 8px #1a1a1d;
       z-index: 2;
-      box-shadow: 0 0 15px rgba(140, 120, 255, 0.25);
-      transition: 0.3s;
+      transition: all 0.25s ease;
     }
 
     .crypto-box:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 25px rgba(140, 120, 255, 0.45);
+      transform: translateY(-4px);
+      box-shadow: 4px 4px 12px #0a0a0c, -3px -3px 12px #1b1b1f;
     }
 
     .variacao-pos {
-      color: #00ffd0; /* Neon ciano para positivo */
+      color: #46c46f;
     }
 
     .variacao-neg {
-      color: #ff4d6d; /* Rosa forte para negativo */
+      color: #ff5b5b;
     }
 
     .lucro-pos {
-      color: #00ffd0;
+      color: #46c46f;
     }
 
     .lucro-neg {
-      color: #ff4d6d;
+      color: #ff5b5b;
     }
 
     #btcBox {
       top: calc(50% - 110px);
-      left: 20px;
+      left: 25px;
     }
     #oxoBox {
       top: calc(50% + 20px);
-      left: 20px;
+      left: 25px;
     }
     #solBox {
       top: calc(50% - 110px);
-      right: 20px;
+      right: 25px;
     }
     #ethBox {
       top: calc(50% + 20px);
-      right: 20px;
+      right: 25px;
     }
 
     footer {
       position: absolute;
-      bottom: 10px;
+      bottom: 15px;
       width: 100%;
       text-align: center;
-      font-family: monospace;
-      font-size: 18px;
+      font-size: 15px;
+      letter-spacing: 0.5px;
       z-index: 2;
+      color: #8fa3b5;
     }
 
     #footerText {
-      color: #b79aff;
       opacity: 0;
-      transition: opacity 1s ease-in-out, color 1s;
-      text-shadow: 0 0 8px #6a00ff;
-    }
-
-    /* Efeito de pulso suave no fundo */
-    @keyframes pulse-bg {
-      0%, 100% { background-color: #050510; }
-      50% { background-color: #0a0a20; }
-    }
-    body {
-      animation: pulse-bg 10s infinite ease-in-out;
+      transition: opacity 1s ease-in-out;
     }
   </style>
 </head>
@@ -145,6 +134,7 @@
   <div id="oxoBox" class="crypto-box">0x0.ai: Carregando...</div>
   <div id="solBox" class="crypto-box">SOL: Carregando...</div>
   <div id="ethBox" class="crypto-box">ETH: Carregando...</div>
+
   <div class="background-eye"></div>
   <canvas id="spiralCanvas"></canvas>
   <div id="statusMessage"><a href="page2.html" target="_blank">???????</a></div>
@@ -163,23 +153,21 @@
 
     function typeFooter() {
       if (currentChar <= fullText.length) {
-        let html = `<span style="color:#b79aff">${fullText.slice(0, currentChar)}</span>`;
-        footerTextEl.innerHTML = html;
+        footerTextEl.innerHTML = fullText.slice(0, currentChar);
         footerTextEl.style.opacity = 1;
         currentChar++;
-        setTimeout(typeFooter, 100);
+        setTimeout(typeFooter, 80);
       } else {
         setTimeout(() => {
           typing = false;
           eraseFooter();
-        }, 3000);
+        }, 2500);
       }
     }
 
     function eraseFooter() {
       if (currentChar >= 0) {
-        let html = `<span style="color:#b79aff">${fullText.slice(0, currentChar)}</span>`;
-        footerTextEl.innerHTML = html;
+        footerTextEl.innerHTML = fullText.slice(0, currentChar);
         currentChar--;
         setTimeout(eraseFooter, 30);
       } else {
@@ -278,7 +266,7 @@
         const x = centerX + radius * Math.cos(angle);
         const y = centerY + radius * Math.sin(angle);
         let fade = Math.max(1 - (index - i) / maxChars, 0) ** 1.5;
-        ctx.fillStyle = `rgba(183,154,255,${fade})`;
+        ctx.fillStyle = `rgba(150,160,180,${fade})`;
         ctx.fillText(char, x, y);
         angle += angleStep;
       }
