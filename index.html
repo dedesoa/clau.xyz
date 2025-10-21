@@ -7,11 +7,13 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: black;
+      background: radial-gradient(circle at center, #050510 0%, #000 100%);
       width: 100%;
       height: 100%;
       position: relative;
-      font-family: monospace;
+      font-family: "Consolas", "Courier New", monospace;
+      overflow: hidden;
+      color: #e0e0e0;
     }
 
     .background-eye {
@@ -23,7 +25,8 @@
       background: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczZnbHpycDBtNjJ6dml4cDJ3djg4amxxejZwNnIzc29kMTdoemQ4biZlcD12MV9naWZzX3NlYXJjaCZjdD1n/n3UBd63oVlQLC/giphy.gif") no-repeat center center;
       background-size: contain;
       transform: translate(-50%, -50%);
-      opacity: 1.45; /* Corrigido para garantir que o GIF apareça */
+      opacity: 0.35;
+      filter: drop-shadow(0 0 20px #6a00ff);
       z-index: 0;
     }
 
@@ -39,49 +42,58 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      color: lime;
+      color: #9e8cff;
       font-family: monospace;
       font-size: 16px;
       z-index: 2;
     }
 
     #statusMessage a {
-      color: lime;
+      color: #b79aff;
       text-decoration: none;
+      transition: 0.3s;
     }
 
     #statusMessage a:hover {
-      text-decoration: underline;
+      color: #fff;
+      text-shadow: 0 0 8px #b79aff;
     }
 
     .crypto-box {
       position: absolute;
       width: 250px;
       padding: 15px;
-      background: #00000088;
-      border: 1px solid lime;
-      border-radius: 10px;
-      color: white; /* Texto base em branco */
+      background: rgba(20, 20, 35, 0.65);
+      border: 1px solid rgba(140, 120, 255, 0.4);
+      border-radius: 12px;
+      backdrop-filter: blur(6px);
+      color: #e6e6e6;
       font-family: monospace;
       font-size: 14px;
       z-index: 2;
-      box-shadow: 0 0 10px lime;
+      box-shadow: 0 0 15px rgba(140, 120, 255, 0.25);
+      transition: 0.3s;
+    }
+
+    .crypto-box:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(140, 120, 255, 0.45);
     }
 
     .variacao-pos {
-      color: #00ff00; /* Verde para variação positiva */
+      color: #00ffd0; /* Neon ciano para positivo */
     }
 
     .variacao-neg {
-      color: red; /* Vermelho para variação negativa */
+      color: #ff4d6d; /* Rosa forte para negativo */
     }
 
     .lucro-pos {
-      color: #00ff00; /* Verde para lucro positivo */
+      color: #00ffd0;
     }
 
     .lucro-neg {
-      color: red; /* Vermelho para lucro negativo */
+      color: #ff4d6d;
     }
 
     #btcBox {
@@ -107,14 +119,24 @@
       width: 100%;
       text-align: center;
       font-family: monospace;
-      font-size: 20px;
+      font-size: 18px;
       z-index: 2;
     }
 
     #footerText {
-      color: lime;
+      color: #b79aff;
       opacity: 0;
-      transition: opacity 1s ease-in-out;
+      transition: opacity 1s ease-in-out, color 1s;
+      text-shadow: 0 0 8px #6a00ff;
+    }
+
+    /* Efeito de pulso suave no fundo */
+    @keyframes pulse-bg {
+      0%, 100% { background-color: #050510; }
+      50% { background-color: #0a0a20; }
+    }
+    body {
+      animation: pulse-bg 10s infinite ease-in-out;
     }
   </style>
 </head>
@@ -141,10 +163,9 @@
 
     function typeFooter() {
       if (currentChar <= fullText.length) {
-        let html = `<span style="color:lime">${fullText.slice(0, currentChar)}</span>`;
+        let html = `<span style="color:#b79aff">${fullText.slice(0, currentChar)}</span>`;
         footerTextEl.innerHTML = html;
         footerTextEl.style.opacity = 1;
-
         currentChar++;
         setTimeout(typeFooter, 100);
       } else {
@@ -157,7 +178,7 @@
 
     function eraseFooter() {
       if (currentChar >= 0) {
-        let html = `<span style="color:lime">${fullText.slice(0, currentChar)}</span>`;
+        let html = `<span style="color:#b79aff">${fullText.slice(0, currentChar)}</span>`;
         footerTextEl.innerHTML = html;
         currentChar--;
         setTimeout(eraseFooter, 30);
@@ -216,34 +237,10 @@
       const dolarBRL = data.usd.brl;
 
       const moedas = [
-        {
-          id: "bitcoin",
-          nome: "BTC",
-          box: "btcBox",
-          precoCompraUSD: 5000,
-          ano: "2018"
-        },
-        {
-          id: "ethereum",
-          nome: "ETH",
-          box: "ethBox",
-          precoCompraUSD: 450,
-          ano: "2020"
-        },
-        {
-          id: "solana",
-          nome: "SOL",
-          box: "solBox",
-          precoCompraUSD: 12.25,
-          ano: "2022"
-        },
-        {
-          id: "0x0-ai-ai-smart-contract",
-          nome: "0x0.ai",
-          box: "oxoBox",
-          precoCompraUSD: 0.001569,
-          ano: "2023"
-        }
+        { id: "bitcoin", nome: "BTC", box: "btcBox", precoCompraUSD: 5000, ano: "2018" },
+        { id: "ethereum", nome: "ETH", box: "ethBox", precoCompraUSD: 450, ano: "2020" },
+        { id: "solana", nome: "SOL", box: "solBox", precoCompraUSD: 12.25, ano: "2022" },
+        { id: "0x0-ai-ai-smart-contract", nome: "0x0.ai", box: "oxoBox", precoCompraUSD: 0.001569, ano: "2023" }
       ];
 
       moedas.forEach(moeda => {
@@ -251,14 +248,14 @@
         const precoBRL = precoUSD * dolarBRL;
         const compraBRL = moeda.precoCompraUSD * dolarBRL;
         const lucroPercent = ((precoBRL - compraBRL) / compraBRL) * 100;
-        const variacao = data[moeda.id].usd_24h_change || 0; // Variação de 24h
+        const variacao = data[moeda.id].usd_24h_change || 0;
         const variacaoClass = variacao < 0 ? 'variacao-neg' : 'variacao-pos';
         const lucroClass = lucroPercent < 0 ? 'lucro-neg' : 'lucro-pos';
 
         const html = `
           ${moeda.nome}: ${formatBRL(precoBRL)} <span class="${variacaoClass}">(${variacao.toFixed(2)}%)</span><br>
           DCA: ${formatBRL(compraBRL)}<br>
-          Holding &#x23F3;  ${moeda.ano}–2025: <span class="${lucroClass}">${lucroPercent.toFixed(3)}%</span>
+          Holding &#x23F3; ${moeda.ano}–2025: <span class="${lucroClass}">${lucroPercent.toFixed(3)}%</span>
         `;
         document.getElementById(moeda.box).innerHTML = html;
       });
@@ -281,7 +278,7 @@
         const x = centerX + radius * Math.cos(angle);
         const y = centerY + radius * Math.sin(angle);
         let fade = Math.max(1 - (index - i) / maxChars, 0) ** 1.5;
-        ctx.fillStyle = `rgba(0,255,0,${fade})`;
+        ctx.fillStyle = `rgba(183,154,255,${fade})`;
         ctx.fillText(char, x, y);
         angle += angleStep;
       }
@@ -302,13 +299,6 @@
     }
 
     draw();
-
-    setInterval(() => {
-      document.body.style.backgroundColor = '#003300';
-      setTimeout(() => document.body.style.backgroundColor = 'black', 50);
-    }, 5000);
   </script>
 </body>
-
 </html>
-
